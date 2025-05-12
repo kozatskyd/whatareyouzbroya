@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Яка ти українська зброя?</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #111; color: #fff; }
+    .container { max-width: 600px; margin: 2rem auto; padding: 1rem; background: #1a1a1a; border-radius: 8px; box-shadow: 0 0 10px rgba(255,255,255,0.05); }
+    .question { font-size: 1.2rem; margin-bottom: 1rem; }
+    .answers button { display: block; margin: 0.5rem 0; padding: 0.8rem 1rem; background: #333; border: none; border-radius: 6px; cursor: pointer; text-align: left; color: #fff; }
+    .answers button:hover { background: #444; }
+    #result { margin-top: 2rem; font-weight: bold; font-size: 1.3rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="quiz">
+      <div id="question" class="question"></div>
+      <div id="answers" class="answers"></div>
+    </div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "Коли ти робиш щось важливе, ти…",
+        a: [
+          { text: "Враховуєш всі ризики і дієш без поспіху", type: "Стугна-П" },
+          { text: "Швидко включаєшся у процес, і навколо тебе починає кипіти робота", type: "Буцефал" },
+          { text: "Непомітно, але впевнено пробираєшся до цілі", type: "Корсар" },
+          { text: "Робиш це так, щоб усі побачили й запам'ятали надовго", type: "Богдана" }
+        ]
+      },
+      {
+        q: "У стресових ситуаціях ти зазвичай…",
+        a: [
+          { text: "Зберігаєш залізний спокій, продумуючи стратегію", type: "UAR-10" },
+          { text: "Одразу кидаєшся в бій, вирішуючи проблему на місці", type: "Лютий" },
+          { text: "Відступаєш, оцінюєш ситуацію з безпечної дистанції", type: "Фурія" },
+          { text: "Влаштовуєш маленький 'вибух' емоцій", type: "Граната РГТ-27С" }
+        ]
+      },
+      {
+        q: "На вечірці тебе найімовірніше знайти…",
+        a: [
+          { text: "У куточку, спостерігаючи за всіма, ніби вивчаєш людей", type: "Лелека-100" },
+          { text: "У центрі уваги, легко заводячи нові знайомства", type: "Буцефал" },
+          { text: "Біля стійки, дискутуючи про щось дуже важливе", type: "Нептун" },
+          { text: "Поруч із виходом, бо ти вже вирішив піти", type: "Корсар" }
+        ]
+      }
+    ];
+
+    const results = {
+      "Стугна-П": "Спокійний, уважний, зважений та завжди влучаєш точно в ціль.",
+      "Буцефал": "Комунікабельний, швидкий та ефективний у команді.",
+      "Корсар": "Непомітний, стриманий, але коли треба — точно знаєш, куди і коли вдарити.",
+      "Богдана": "Гучний, масштабний, любиш вирішувати все з розмахом.",
+      "UAR-10": "Стриманий, точний і завжди на крок попереду.",
+      "Лютий": "Швидкий, жорсткий, безкомпромісний. Якщо тебе випустили — назад уже не повертаєшся.",
+      "Фурія": "Тихий, обережний, але завжди проникаєш туди, куди інші не наважуються.",
+      "Граната РГТ-27С": "Яскравий, емоційний і завжди готовий 'вибухнути' позитивом.",
+      "Лелека-100": "Тихий, розважливий та стратегічно мислячий спостерігач.",
+      "Нептун": "Влучний, впевнений і дієш із чіткою стратегією."
+    };
+
+    let current = 0;
+    const score = {};
+    const quiz = document.getElementById("quiz");
+    const question = document.getElementById("question");
+    const answers = document.getElementById("answers");
+    const result = document.getElementById("result");
+
+    function showQuestion() {
+      if (current >= questions.length) return showResult();
+      const q = questions[current];
+      question.textContent = q.q;
+      answers.innerHTML = "";
+      q.a.forEach((ans) => {
+        const btn = document.createElement("button");
+        btn.textContent = ans.text;
+        btn.onclick = () => {
+          score[ans.type] = (score[ans.type] || 0) + 1;
+          current++;
+          showQuestion();
+        };
+        answers.appendChild(btn);
+      });
+    }
+
+    function showResult() {
+      quiz.style.display = "none";
+      const sorted = Object.entries(score).sort((a, b) => b[1] - a[1]);
+      const topType = sorted[0][0];
+      result.textContent = `Ти — ${topType}: ${results[topType]}`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
